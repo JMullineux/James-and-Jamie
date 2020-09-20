@@ -9,17 +9,14 @@ public class Gun : MonoBehaviour
     public float equipSpeed = 1f;
     public float rotateSpeed = 50f;
 
-    
-
     bool isEquipped = false;
-    bool isEquipMoving = false;
-    bool isEquipRotating = false;
 
     //bool isEquipping = false;
 
     public Camera playerCamera;
     public Transform equipTransform;
     public Transform lookAtTransform;
+    public GameObject player;
 
 
     // Start is called before the first frame update
@@ -45,28 +42,6 @@ public class Gun : MonoBehaviour
             
         }
 
-        if(isEquipMoving)
-        {
-            this.transform.position = Vector3.MoveTowards(this.transform.position, equipTransform.position, equipSpeed * Time.deltaTime);
-
-            /*
-            if(this.transform.position == equipTransform.position)
-            {
-                isEquipMoving = false;
-            }
-            */
-        }
-
-        if(isEquipped)
-        {
-            //this.transform.Rotate(Vector3.left, rotateSpeed * Time.deltaTime);
-            this.transform.LookAt(equipTransform);
-
-            //if(this.transform.rotation == equipTransform.rotation)
-            //{
-                //isEquipRotating = false;
-            //}
-        }
     }
 
     void EquipFire()
@@ -77,16 +52,10 @@ public class Gun : MonoBehaviour
             Debug.Log(hit.transform.name);
             if(hit.transform.name == this.transform.name) // check if the hit result is the pistol
             {
-                isEquipped = true; // logically equip weapon
-                isEquipMoving = true;
-                isEquipRotating = true;
 
-
-                //isEquipping = true;
-
-                //Physically animate equipping the weapon
-                EquipAnimation();
-
+                //Equip the weapon
+                isEquipped = true;
+                EquipWeapon();
 
             }
         }
@@ -103,8 +72,10 @@ public class Gun : MonoBehaviour
         }
     }
 
-    void EquipAnimation()
+    void EquipWeapon()
     {
-        
+        this.transform.parent = playerCamera.transform;
+        this.transform.localPosition = equipTransform.localPosition;
+        this.transform.localRotation = equipTransform.localRotation;
     }
 }
