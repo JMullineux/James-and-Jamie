@@ -17,12 +17,22 @@ public class Gun : MonoBehaviour
     public Transform equipTransform;
     public Transform lookAtTransform;
     public GameObject player;
+    public ParticleSystem muzzleFlash;
+
+    public GameObject defaultImpactEffect;
+    public GameObject npcImpactEffect;
+
+    private AudioSource shootSound;
+
+    public LayerMask npcLayer;
 
 
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log(this.transform.name);
+
+        shootSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -63,11 +73,28 @@ public class Gun : MonoBehaviour
 
     void ShootFire()
     {
+
+        // Muzzle Flash and Shot Sound
+        muzzleFlash.Play();
+        shootSound.Play();
+
         RaycastHit hit;
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, range))
         {
-            Debug.Log(hit.transform.name);
-            Debug.Log("FIRE");
+
+            // If NPC is hit, use blood particle
+            if (hit.transform.gameObject.layer == npcLayer)
+            {
+                GameObject npcImpactGO = Instantiate(npcImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                Destroy(npcImpactGO, 2f);
+            }
+
+            // Else use dust particle
+            else
+            {
+                GameObject defaultImpactGO = Instantiate(defaultImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                Destroy(defaultImpactGO, 2f);
+            }
 
         }
     }
