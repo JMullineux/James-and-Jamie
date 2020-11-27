@@ -7,6 +7,7 @@ public class badguyAnimationStateController : MonoBehaviour
 
     public Animator animator;
     public Rigidbody RIGID_BODY;
+    public Rigidbody hips;
     public List<Collider> RagdollParts = new List<Collider>();
 
     // Start is called before the first frame update
@@ -16,7 +17,7 @@ public class badguyAnimationStateController : MonoBehaviour
         SetKinematic();
         Physics.IgnoreLayerCollision(9, 10, true); //Box Collider and the Ragdoll do no collide with eachother
         Invoke("EquipWeapon", 4);
-        Invoke("TurnOnRagdoll", 8);
+        //Invoke("TurnOnRagdoll", 8);
         
     }
 
@@ -61,7 +62,7 @@ public class badguyAnimationStateController : MonoBehaviour
         }
     }
 
-    void TurnOnRagdoll()
+    public void TurnOnRagdoll(RaycastHit hit)
     {
         RIGID_BODY.useGravity = false;
         this.gameObject.GetComponent<BoxCollider>().enabled = false;
@@ -82,13 +83,50 @@ public class badguyAnimationStateController : MonoBehaviour
 
             //RIGID_BODY.isKinematic = false;
         }
+
+        var closestDist = 10.0f;
+        Rigidbody closestBone = null;
+
+        foreach (Rigidbody rb in bodies)
+        {
+            if (rb.gameObject != this.gameObject)
+            {
+                float dist = Vector3.Distance(hit.point, rb.gameObject.transform.position);
+                if(dist < closestDist)
+                {
+                    closestBone = rb;
+                    closestDist = dist;
+                }    
+                //Debug.Log(rb.name + " " + dist);
+            }
+        }
+
+        Debug.Log("The closest bone is " + closestBone.name);
+
+        closestBone.AddForce(transform.forward * -5000);
+
     }
 
-    void Die()
+    Rigidbody GetClosestRb(Rigidbody[] bodies, RaycastHit hit)
     {
+        Rigidbody bestTarget = null;
+        float closestDistanceSqr = Mathf.Infinity;
+        Vector3 currentPosition = hit.transform.position;
+        foreach (Rigidbody potentialTarget in bodies)
+        {
+            Vector3 directionToTarget = potentialTarget.position - currentPosition;
+            float dSqrToTarget = directionToTarget.sqrMagnitude;
+            if (dSqrToTarget < closestDistanceSqr && potentialTarget.gameObject != this.gameObject)
+            {
+                Debug.Log(potentialTarget.name);
+                closestDistanceSqr = dSqrToTarget;
+                bestTarget = potentialTarget;
+            }
+        }
 
+        return bestTarget;
     }
 
-       
+
 
 }

@@ -9,6 +9,8 @@ public class Gun : MonoBehaviour
     public float equipSpeed = 1f;
     public float rotateSpeed = 50f;
 
+    public badguyAnimationStateController HitEnemy;
+
     bool isEquipped = false;
 
     //bool isEquipping = false;
@@ -82,11 +84,18 @@ public class Gun : MonoBehaviour
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, range))
         {
 
+            var badguyController = hit.transform.gameObject.GetComponent<badguyAnimationStateController>();
+
             // If NPC is hit, use blood particle
             if (hit.transform.gameObject.layer == npcLayer)
             {
                 GameObject npcImpactGO = Instantiate(npcImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(npcImpactGO, 2f);
+                var objectHit = hit.transform.gameObject;
+                var objectHitTest = objectHit.GetComponent<badguyAnimationStateController>();
+
+
+
             }
 
             // Else use dust particle
@@ -94,9 +103,17 @@ public class Gun : MonoBehaviour
             {
                 GameObject defaultImpactGO = Instantiate(defaultImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(defaultImpactGO, 2f);
+
             }
 
-        }
+            if (badguyController != null)
+            {
+                badguyController.TurnOnRagdoll(hit);
+            }
+
+            Debug.Log("Transform hit was " + hit.transform.name);
+
+        } 
     }
 
     void EquipWeapon()
