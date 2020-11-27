@@ -1,2 +1,2 @@
-# James-and-Jamie
-A Unity game project created by James and Jamie
+# Big Iron
+A Unity game project created by James Mullineux
