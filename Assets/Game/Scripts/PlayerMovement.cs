@@ -7,9 +7,8 @@ public class PlayerMovement : MonoBehaviour
 
     public CharacterController controller;  //Reference to the character controller
 
-    public float moveSpeed = 12f;           //The speed the player will move on the x and y axis
-    public float gravity = -9.81f;          //The value of gravity, applied to the players y velocity
-    public float jumpHeight = 3f;
+    [SerializeField] private float moveSpeed, gravity, jumpHeight;
+
 
     public Transform groundCheck;           //The transform of the ground check object on the player
     public float groundDistance = 0.4f;     //The radius of the groundCheck sphere

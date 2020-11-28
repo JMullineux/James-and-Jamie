@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class CameraControl : MonoBehaviour
 {
+    [SerializeField] private float mouseSpeed, xRotation, defaultFOV, aimFOV, aimSpeed;
 
-    float mouseSpeed = 200f;
-    float xRotation = 0f;
+    private float defaultMouseSpeed;
 
     public Transform playerBody;
     //public Transform playerCamera;
@@ -15,6 +15,9 @@ public class CameraControl : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        this.GetComponent<Camera>().fieldOfView = defaultFOV;
+
+        defaultMouseSpeed = mouseSpeed;
     }
 
     // Update is called once per frame
@@ -30,5 +33,16 @@ public class CameraControl : MonoBehaviour
         playerBody.Rotate(Vector3.up * mouseX);
         //playerCamera.Rotate(Vector3.right * -mouseY);
 
+        if (Input.GetButton("Fire2"))
+        {
+            this.GetComponent<Camera>().fieldOfView = aimFOV;
+            mouseSpeed = aimSpeed;
+
+        }
+        else
+        {
+            this.GetComponent<Camera>().fieldOfView = defaultFOV;
+            mouseSpeed = defaultMouseSpeed;
+        }
     }
 }
