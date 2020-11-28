@@ -67,6 +67,7 @@ public class badguyAnimationStateController : MonoBehaviour
         RIGID_BODY.useGravity = false;
         this.gameObject.GetComponent<BoxCollider>().enabled = false;
         animator.enabled = false;
+        this.gameObject.tag = "Untagged";
 
         foreach(Collider c in RagdollParts)
         {
