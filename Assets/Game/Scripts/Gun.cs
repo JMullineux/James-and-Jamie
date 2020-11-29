@@ -71,7 +71,7 @@ public class Gun : MonoBehaviour
 
 
 
-        Debug.Log(canFire);
+        //Debug.Log(canFire);
 
     }
 

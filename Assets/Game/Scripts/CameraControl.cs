@@ -14,7 +14,8 @@ public class CameraControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        LockCursor();
+
         this.GetComponent<Camera>().fieldOfView = defaultFOV;
 
         defaultMouseSpeed = mouseSpeed;
@@ -44,5 +45,17 @@ public class CameraControl : MonoBehaviour
             this.GetComponent<Camera>().fieldOfView = defaultFOV;
             mouseSpeed = defaultMouseSpeed;
         }
+    }
+
+    public void LockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    public void UnlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 }

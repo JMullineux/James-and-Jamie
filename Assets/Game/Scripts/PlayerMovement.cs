@@ -16,11 +16,12 @@ public class PlayerMovement : MonoBehaviour
 
     Vector3 velocity;                       //The player velocity
     bool isGrounded;
+    bool canMove;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        canMove = true;
     }
 
     // Update is called once per frame
@@ -40,13 +41,24 @@ public class PlayerMovement : MonoBehaviour
         Vector3 move = transform.right * xMovement + transform.forward * zMovement;
         velocity.y += gravity * Time.deltaTime;
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded && canMove)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
 
-        controller.Move(move * moveSpeed * Time.deltaTime);
-        controller.Move(velocity * Time.deltaTime);
+        if(canMove)
+        {
+            controller.Move(move * moveSpeed * Time.deltaTime);
+            controller.Move(velocity * Time.deltaTime);
 
+            
+        }
+
+        Debug.Log(canMove);
+    }
+
+    public void Freeze()
+    {
+        canMove = false;
     }
 }
