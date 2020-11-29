@@ -5,15 +5,18 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
 
+    Animator animator;
+
     public float range = 100f;
     public float equipSpeed = 1f;
     public float rotateSpeed = 50f;
 
+    
+
     public badguyAnimationStateController HitEnemy;
 
     bool isEquipped = false;
-
-    //bool isEquipping = false;
+    bool canFire = true;
 
     public Camera playerCamera;
     public Transform equipTransform;
@@ -29,10 +32,13 @@ public class Gun : MonoBehaviour
     public LayerMask npcLayer;
 
 
+
     // Start is called before the first frame update
     void Start()
     {
         Debug.Log(this.transform.name);
+
+        animator = GetComponent<Animator>();
 
         shootSound = GetComponent<AudioSource>();
     }
@@ -47,14 +53,28 @@ public class Gun : MonoBehaviour
                 EquipFire();
             }
 
-            else if (isEquipped)
+            else if (isEquipped && canFire)
             {
-                ShootFire();
+                Invoke("ShootFire", 0.1f); // Small delay prevents spam-clicking breaking the reload animation
             }
             
         }
 
+        //transform.Rotate(Vector3.up, rotateSpeed * Time.deltaTime);
+
+        //float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.x, 180.0f, 45.0f * Time.deltaTime);
+        //transform.eulerAngles = new Vector3(angle, 0, 0);
+
+        //var target1 = Vector3(0f,180f,0f);
+
+        //Vector3.RotateTowards(transform.rotation.x, 0, 180, 0, 45f, 180f);
+
+
+
+        Debug.Log(canFire);
+
     }
+
 
     void EquipFire()
     {
@@ -113,7 +133,23 @@ public class Gun : MonoBehaviour
 
             Debug.Log("Transform hit was " + hit.transform.name);
 
-        } 
+        }
+
+        StartReload();
+        
+
+    }
+
+    void StartReload()
+    {
+        animator.SetTrigger("reload");
+        canFire = false;
+    }
+
+    void StopReload()
+    {
+        animator.SetTrigger("reload");
+        canFire = true;
     }
 
     void EquipWeapon()

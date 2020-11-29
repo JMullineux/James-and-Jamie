@@ -18,7 +18,7 @@ public class EnemyManager : MonoBehaviour
     void Update()
     {
         enemies = GameObject.FindGameObjectsWithTag("enemy");
-        Debug.Log("Enemies: " + enemies.Length);
+        //Debug.Log("Enemies: " + enemies.Length);
         
         if(enemies.Length <= 0)
         {
