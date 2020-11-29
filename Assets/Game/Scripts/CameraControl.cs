@@ -9,7 +9,8 @@ public class CameraControl : MonoBehaviour
     private float defaultMouseSpeed;
 
     public Transform playerBody;
-    //public Transform playerCamera;
+
+    bool cursorLocked;
 
     // Start is called before the first frame update
     void Start()
@@ -24,17 +25,22 @@ public class CameraControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         float mouseX = Input.GetAxis("Mouse X") * mouseSpeed * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSpeed * Time.deltaTime;
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        playerBody.Rotate(Vector3.up * mouseX);
-        //playerCamera.Rotate(Vector3.right * -mouseY);
+        if(cursorLocked)
+        {
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
 
-        if (Input.GetButton("Fire2"))
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+            playerBody.Rotate(Vector3.up * mouseX);
+        }
+        
+
+        if (Input.GetButton("Fire2") && cursorLocked)
         {
             this.GetComponent<Camera>().fieldOfView = aimFOV;
             mouseSpeed = aimSpeed;
@@ -51,11 +57,13 @@ public class CameraControl : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        cursorLocked = true;
     }
 
     public void UnlockCursor()
     {
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+        cursorLocked = false;
     }
 }
