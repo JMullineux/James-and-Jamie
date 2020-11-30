@@ -8,6 +8,7 @@ public class badguyAnimationStateController : MonoBehaviour
     public Animator animator;
     public Rigidbody RIGID_BODY;
     public Rigidbody hips;
+    public GameObject weapon;
     public List<Collider> RagdollParts = new List<Collider>();
 
     // Start is called before the first frame update
@@ -30,6 +31,11 @@ public class badguyAnimationStateController : MonoBehaviour
     void EquipWeapon()
     {
         animator.SetBool("isEquipping", true);
+    }
+
+    void AnimateEquipWeapon()
+    {
+        weapon.GetComponent<EnemyPistol>().Equip();
     }
 
     void SetRagdollParts()
