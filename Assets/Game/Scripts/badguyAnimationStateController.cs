@@ -68,6 +68,9 @@ public class badguyAnimationStateController : MonoBehaviour
         }
     }
 
+    /*******************************************************************************
+     *** This is a legacy function, it finds the closest bone to a raycast point ***
+     *******************************************************************************
     public void TurnOnRagdoll(RaycastHit hit)
     {
         RIGID_BODY.useGravity = false;
@@ -111,6 +114,33 @@ public class badguyAnimationStateController : MonoBehaviour
         Debug.Log("The closest bone is " + closestBone.name);
 
         closestBone.AddForce(transform.forward * -5000);
+        
+
+    }
+    */
+
+    public void ActivateRagdoll(Rigidbody hitRigidbody) //Takes in a rigid body "hitRigidBody" from a raycast, and activates the ragdoll
+    {
+        RIGID_BODY.useGravity = false;
+        this.gameObject.GetComponent<BoxCollider>().enabled = false;    // Disables the box collider used for floor collision
+        animator.enabled = false;                                       // Enemy will no longer animate
+        this.gameObject.tag = "Untagged";                               // Tells the enemyManager that the enemy is dead
+
+        foreach (Collider c in RagdollParts)
+        {
+            c.isTrigger = false;
+        }
+
+        Rigidbody[] bodies = this.gameObject.GetComponentsInChildren<Rigidbody>();
+        foreach (Rigidbody rb in bodies)
+        {
+            if (rb.gameObject != this.gameObject)
+            {
+                rb.isKinematic = false;
+            }
+        }
+
+        hitRigidbody.AddForce(transform.forward * -5000);
 
     }
 

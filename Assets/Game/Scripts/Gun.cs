@@ -30,6 +30,7 @@ public class Gun : MonoBehaviour
     private AudioSource shootSound;
 
     public LayerMask npcLayer;
+    public LayerMask ragdollLayer;
 
 
 
@@ -95,7 +96,6 @@ public class Gun : MonoBehaviour
 
     void ShootFire()
     {
-
         // Muzzle Flash and Shot Sound
         muzzleFlash.Play();
         shootSound.Play();
@@ -104,18 +104,19 @@ public class Gun : MonoBehaviour
         if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, range))
         {
 
-            var badguyController = hit.transform.gameObject.GetComponent<badguyAnimationStateController>();
+            //var badguyController = hit.transform.gameObject.GetComponent<badguyAnimationStateController>();
+            //var newBadguyController = hit.
 
-            // If NPC is hit, use blood particle
-            if (hit.transform.gameObject.layer == npcLayer)
+            var hitRoot = hit.transform.root;
+            var hitRigidbody = hit.transform.gameObject.GetComponent<Rigidbody>();
+            var badguyController = hitRoot.GetComponent<badguyAnimationStateController>();
+
+            // If a ragdoll is hit, use blood particle
+            if (hit.transform.gameObject.layer == ragdollLayer)
             {
                 GameObject npcImpactGO = Instantiate(npcImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(npcImpactGO, 2f);
                 var objectHit = hit.transform.gameObject;
-                var objectHitTest = objectHit.GetComponent<badguyAnimationStateController>();
-
-
-
             }
 
             // Else use dust particle
@@ -123,21 +124,22 @@ public class Gun : MonoBehaviour
             {
                 GameObject defaultImpactGO = Instantiate(defaultImpactEffect, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(defaultImpactGO, 2f);
-
+                //Debug.Log("The Raycast hit something else!");
             }
 
-            if (badguyController != null)
+            if (badguyController != null && hitRigidbody != null)
             {
-                badguyController.TurnOnRagdoll(hit);
+                badguyController.ActivateRagdoll(hitRigidbody);
             }
 
-            Debug.Log("Transform hit was " + hit.transform.name);
 
+            //Debug.Log("The Root of the Transform hit was: " + hit.transform.root.name);
+            //Debug.Log("GameObject hit was " + hit.transform.gameObject.name);
+            //Debug.Log("The Collider that was hit is: " + hitCollider.name);
+            //Debug.Log("The Root Parent of the Collider is: " + hitCollider.transform.root);
         }
 
         StartReload();
-        
-
     }
 
     void StartReload()

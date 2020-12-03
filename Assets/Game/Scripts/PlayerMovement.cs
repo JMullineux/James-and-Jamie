@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
             
         }
 
-        Debug.Log(canMove);
+        //Debug.Log(canMove);
     }
 
     public void Freeze()
